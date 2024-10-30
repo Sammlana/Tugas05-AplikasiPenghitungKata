@@ -1,6 +1,11 @@
-
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,6 +40,13 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
                 updateCounts();
             }
         });
+        
+        searchField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchWordInText();
+            }
+        });
     }
     
     
@@ -56,13 +68,18 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         sentenceCountLabel = new javax.swing.JLabel();
         charCountLabel = new javax.swing.JLabel();
+        searchWordCountLabel = new javax.swing.JLabel();
+        saveButton = new javax.swing.JButton();
+        searchField = new javax.swing.JTextField();
+        paragraphCountLabel = new javax.swing.JLabel();
+        searctWord = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
-        jLabel1.setText("Aplikasi Penghitung Angka");
+        jLabel1.setText("Aplikasi Penghitung Kata");
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         jLabel2.setText("Input Text");
@@ -87,6 +104,19 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
 
         charCountLabel.setText("Jumlah Karakter: 0");
 
+        searchWordCountLabel.setText("Jumlah Kata Ditemukan: 0");
+
+        saveButton.setText("Simpan");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
+        paragraphCountLabel.setText("Jumlah Paragraf: 0");
+
+        searctWord.setText("Cari Kata:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -95,40 +125,66 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
                 .addGap(234, 234, 234)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(countButton)
-                        .addGap(42, 42, 42)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(charCountLabel)
-                            .addComponent(wordCountLabel)
-                            .addComponent(sentenceCountLabel))))
-                .addGap(327, 327, 327))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(saveButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(countButton))
+                                    .addComponent(charCountLabel)
+                                    .addComponent(wordCountLabel)
+                                    .addComponent(sentenceCountLabel)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(paragraphCountLabel)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addGap(72, 72, 72)
+                        .addComponent(searctWord)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(searchWordCountLabel)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(57, 57, 57)
+                .addGap(58, 58, 58)
                 .addComponent(wordCountLabel)
                 .addGap(18, 18, 18)
                 .addComponent(charCountLabel)
                 .addGap(18, 18, 18)
                 .addComponent(sentenceCountLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(paragraphCountLabel)
+                .addGap(78, 78, 78)
+                .addComponent(searchWordCountLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(countButton))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton2)
+                                .addComponent(countButton)
+                                .addComponent(saveButton))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searctWord)))))
         );
 
         textArea.setColumns(20);
@@ -146,16 +202,21 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 836, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 836, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -169,6 +230,8 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
             wordCountLabel.setText("Jumlah Kata: 0");
             charCountLabel.setText("Jumlah Karakter: 0");
             sentenceCountLabel.setText("Jumlah Kalimat: 0");
+            paragraphCountLabel.setText("Jumlah Paragraf: 0");
+            searchWordCountLabel.setText("Jumlah Kata Ditemukan: 0");
             return; // Keluar dari metode jika teks kosong
         }
 
@@ -176,18 +239,71 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
         String[] words = text.split("\\s+");
         int wordCount = words.length;
 
-        // Hitung jumlah karakter tanpa spasi
+        // Hitung jumlah karakter
         int charCount = text.length();
 
         // Hitung jumlah kalimat
         String[] sentences = text.split("[.!?]");
         int sentenceCount = sentences.length;
 
+        // Hitung jumlah paragraf
+        String[] paragraphs = text.split("\n+");
+        int paragraphCount = paragraphs.length;
+
         // Update label dengan hasil perhitungan
         wordCountLabel.setText("Jumlah Kata: " + wordCount);
         charCountLabel.setText("Jumlah Karakter: " + charCount);
         sentenceCountLabel.setText("Jumlah Kalimat: " + sentenceCount);
+        paragraphCountLabel.setText("Jumlah Paragraf: " + paragraphCount);
+        
+        // Update jumlah kata yang dicari jika ada kata di searchField
+        if (!searchField.getText().trim().isEmpty()) {
+            searchWordInText();
         }
+        
+    }
+
+    // Metode untuk mencari jumlah kemunculan kata tertentu
+    private void searchWordInText() {
+        String searchWord = searchField.getText().trim();
+        String text = textArea.getText();
+        
+        if (searchWord.isEmpty() || text.isEmpty()) {
+            searchWordCountLabel.setText("Jumlah Kata Ditemukan: 0");
+            return;
+        }
+
+        // Hitung jumlah kemunculan kata yang dicari
+        String[] words = text.split("\\s+");
+        int searchCount = 0;
+        for (String word : words) {
+            if (word.equalsIgnoreCase(searchWord)) {
+                searchCount++;
+            }
+        }
+        
+        searchWordCountLabel.setText("Jumlah Kata Ditemukan: " + searchCount);
+    }
+    
+    private void saveToFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showSaveDialog(this);
+        
+        if (option == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write("Teks:\n" + textArea.getText() + "\n\n");
+                writer.write("Jumlah Kata: " + wordCountLabel.getText() + "\n");
+                writer.write("Jumlah Karakter (tanpa spasi): " + charCountLabel.getText() + "\n");
+                writer.write("Jumlah Kalimat: " + sentenceCountLabel.getText() + "\n");
+                writer.write("Jumlah Paragraf: " + paragraphCountLabel.getText() + "\n");
+                writer.write("Jumlah Kata Ditemukan: " + searchWordCountLabel.getText() + "\n");
+                JOptionPane.showMessageDialog(this, "Teks dan hasil perhitungan berhasil disimpan.");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menyimpan file.");
+            }
+        }
+    }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.exit(0);
@@ -200,6 +316,10 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
     private void textAreaInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_textAreaInputMethodTextChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_textAreaInputMethodTextChanged
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        saveToFile();
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,6 +364,11 @@ public class PenghitungKataFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel paragraphCountLabel;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JTextField searchField;
+    private javax.swing.JLabel searchWordCountLabel;
+    private javax.swing.JLabel searctWord;
     private javax.swing.JLabel sentenceCountLabel;
     private javax.swing.JTextArea textArea;
     private javax.swing.JLabel wordCountLabel;
